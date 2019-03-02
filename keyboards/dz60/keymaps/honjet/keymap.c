@@ -1,5 +1,14 @@
 #include QMK_KEYBOARD_H
 
+// Make special keycodes more visible
+#define ____ KC_TRNS
+#define XXXX KC_NO
+
+// Layer definition
+#define L0 0
+#define L1 1
+#define L2 2
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* Base layer
    * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -7,39 +16,62 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┤
    * │ Tab │ Q │ W │ E │ R │ T │ Y │ U │ I │ O │ P │ [ │ ] │Bspc │
    * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴─────┤
-   * │FnCaps│ A │ S │ D │ F │ G │ H │ J │ K │ L │ ; │ ' │ Enter  │
+   * │ LCtl │ A │ S │ D │ F │ G │ H │ J │ K │ L │ ; │ ' │ Enter  │
    * ├──────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬───┬───┤
-   * │LShift │ Z │ X │ C │ V │ B │ N │ M │ , │ . │ / │RSC│ ↑ │Del│
-   * ├────┬──┴─┬─┴──┬┴───┴───┴───┴───┴───┴───┼───┼───┼───┼───┼───┤
-   * │LCtl│LGui│LAlt│         Space          │RAl│FnL│ ← │ ↓ │ → │
-   * └────┴────┴────┴────────────────────────┴───┴───┴───┴───┴───┘
+   * │LShift │ Z │ X │ C │ V │ B │ N │ M │ , │ . │ / │ ↑ │Del│Sft│
+   * ├────┬──┴─┬─┴──┬┴───┴───┼───┴┬──┴───┴───┼───┼───┼───┼───┼───┤
+   * │Fn1 │LGui│LAlt│ LShift │Fn2 │  Space   │RAl│ ← │ ↓ │ → │Ctl│
+   * └────┴────┴────┴────────┴────┴──────────┴───┴───┴───┴───┴───┘
   */
-  [L_BASE] = LAYOUT_directional( \
-    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSLS, KC_GRV,  \
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPC,          \
-    FN_CAPS,          KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,           \
-    KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, RSF_RCT, KC_UP,   KC_DEL,  \
-    KC_LCTL, KC_LGUI,          KC_LALT, XXXXXXX,          KC_SPC,           XXXXXXX,          KC_RALT, FN_FNLK, KC_LEFT, KC_DOWN, KC_RGHT  \
+  [L0] = LAYOUT_all(
+    KC_ESC,  KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSLS, KC_GRV,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPC,
+    KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,   KC_G,   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,
+    KC_LSFT, XXXX,    KC_Z,    KC_X,   KC_C,   KC_V,   KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_UP,   KC_DEL,  KC_RSFT,
+    MO(L1),  KC_LGUI, KC_LALT, KC_LSFT,                MO(L2),  KC_SPC,                    KC_RALT, KC_LEFT, KC_DOWN, KC_RGHT, KC_RCTL
   ),
 
-  /* Function layer
+
+  /* Function layer 1
    * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-   * │   │F1 │F2 │F3 │F4 │F5 │F6 │F7 │F8 │F9 │F10│F11│F12│   │PSc│
+   * │   │F1 │F2 │F3 │F4 │F5 │F6 │F7 │F8 │F9 │F10│F11│F12│Ins│PSc│
    * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┤
-   * │ M4  │M2 │M↑ │M1 │M3 │M5 │   │PgU│ ↑ │PgD│Ply│Prv│Nxt│Clear│
+   * │     │   │   │   │   │   │   │   │   │   │   │   │   │     │
    * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴─────┤
-   * │      │M← │M↓ │M→ │MW↑│   │Hom│ ← │ ↓ │ → │End│   │        │
+   * │      │   │   │   │   │   │Hom│Vo-│Vo+│End│   │   │        │
    * ├──────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬───┬───┤
-   * │       │MA0│MA2│MW←│MW→│   │   │   │Vo-│Vo+│Mut│App│PgU│Ins│
-   * ├────┬──┴─┬─┴──┬┴───┴───┴───┴───┴───┴───┼───┼───┼───┼───┼───┤
-   * │    │    │    │          MW↓           │   │   │Hom│PgD│End│
-   * └────┴────┴────┴────────────────────────┴───┴───┴───┴───┴───┘
+   * │       │   │   │   │   │   │   │Mut│   │   │PUP│   │PDN│   │
+   * ├────┬──┴─┬─┴──┬┴───┴───┼───┴┬──┴───┴───┼───┼───┼───┼───┼───┤
+   * │    │    │    │        │    │          │   │   │   │   │   │
+   * └────┴────┴────┴────────┴────┴──────────┴───┴───┴───┴───┴───┘
   */
-  [L_FN] = LAYOUT_directional( \
-    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_PSCR, \
-    KC_BTN4, KC_BTN2, KC_MS_U, KC_BTN1, KC_BTN3, KC_BTN5, _______, KC_PGUP, KC_UP,   KC_PGDN, KC_MPLY, KC_MPRV, KC_MNXT, CLEAR,            \
-    _______,          KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_U, _______, KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,  _______, _______,          \
-    _______,          KC_ACL0, KC_ACL2, KC_WH_L, KC_WH_R, _______, _______, _______, KC_VOLD, KC_VOLU, KC_MUTE, KC_APP,  KC_PGUP, KC_INS,  \
-    _______, _______,          _______, XXXXXXX,          KC_WH_D,          XXXXXXX,          _______, _______, KC_HOME, KC_PGDN, KC_END   \
+  [L1] = LAYOUT_all(
+    ____, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_INS, KC_PSCR,
+    ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____,
+    ____, ____, ____, ____, ____, ____, KC_HOME, KC_VOLD, KC_VOLU, KC_END, ____, ____, ____,
+    ____, ____, ____, ____, ____, ____, ____, ____, KC_MUTE, ____, ____, KC_PGUP, ____, KC_PGDN, ____,
+    ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____
   ),
+
+  /* Function layer 1
+   * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+   * │Res│   │   │   │   │   │   │   │   │   │   │   │   │   │   │
+   * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┤
+   * │     │   │   │M↑ │   │   │WH←│WH↓│WH↑│WH→│   │   │   │     │
+   * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴─────┤
+   * │      │   │M← │M↓ │M→ │   │ ← │ ↓ │ ↑ │ → │   │   │        │
+   * ├──────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬───┬───┤
+   * │       │   │   │   │   │   │Hom│PDN│PUP│End│   │   │   │   │
+   * ├────┬──┴─┬─┴──┬┴───┴───┼───┴┬──┴───┴───┼───┼───┼───┼───┼───┤
+   * │    │    │    │  BTN1  │    │   BTN1   │BT2│   │   │   │   │
+   * └────┴────┴────┴────────┴────┴──────────┴───┴───┴───┴───┴───┘
+  */
+  [L2] = LAYOUT_all(
+    RESET, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____, ____,
+    ____, ____, ____, KC_MS_U, ____, ____, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, ____, ____, ____, ____,
+    ____, ____, KC_MS_L, KC_MS_D, KC_MS_R, ____, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____, ____, ____,
+    ____, ____, ____, ____, ____, ____, ____, KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____, ____, ____, ____,
+    ____, ____, ____, KC_BTN1, ____, KC_BTN1, ____, ____, ____, ____, ____
+  ),
+
 };
